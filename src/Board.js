@@ -143,20 +143,21 @@
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
       // What about diagonal [0, 1] to [3, 2], [0, 2] to [3, 1] - recursive
-      var counter = 0;
-      for (var i = 0 ; i < this.attributes.n - majorDiagonalColumnIndexAtFirstRow; i++) {
-        var row = this.get(i);
-        if (row[majorDiagonalColumnIndexAtFirstRow + i]) {
-          counter++;
-          if (counter === 2) {
-            return true;
+      if (majorDiagonalColumnIndexAtFirstRow >= 0) {
+         var counter = 0;
+        for (var i = 0 ; i < this.attributes.n - majorDiagonalColumnIndexAtFirstRow; i++) {
+          var row = this.get(i);
+          if (row[majorDiagonalColumnIndexAtFirstRow + i]) {
+            counter++;
+            if (counter === 2) {
+              return true;
+            }
           }
-        }
-      }
-      // if there's a mirror diagonal, then check it also
-      if (majorDiagonalColumnIndexAtFirstRow) {
+        }       
+      } else {
+         // if there's a mirror diagonal, then check it also
         counter = 0;
-        for (var i = majorDiagonalColumnIndexAtFirstRow, colIndex = 0; i < this.attributes.n; i++, colIndex++) {
+        for (var i = -majorDiagonalColumnIndexAtFirstRow, colIndex = 0; i < this.attributes.n; i++, colIndex++) {
           var row = this.get(i);
           if (row[colIndex]) {
             counter++;
@@ -173,6 +174,9 @@
     hasAnyMajorDiagonalConflicts: function() {
       for (var i = 0; i < this.attributes.n; i++) {
         if (this.hasMajorDiagonalConflictAt(i)) {
+          return true;
+        }
+        if (this.hasMajorDiagonalConflictAt(-i)) {
           return true;
         }
       }
