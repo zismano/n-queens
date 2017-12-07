@@ -48,6 +48,11 @@ window.countNRooksSolutions = function(n) {
       return;    
     }
     for (var i = 0; i < n; i++) { 
+      // if n is even, and it's first line and column equals to n/2, then multiply count of solutions by 2 and return
+      if (!(n % 2) && r === 0 && i === n / 2) {
+        solutionCount *= 2;
+        break;
+      }
       board.togglePiece(r, i);
       if (!board.hasAnyColConflicts()) {
         renderNRookSolution(r + 1);
@@ -106,6 +111,11 @@ window.countNQueensSolutions = function(n) {
         return;
       }
       for (var i = 0; i < n; i++) { 
+        // if n is even, and it's first line and column equals to n/2, then multiply count of solutions by 2 and return
+        if (!(n % 2) && r === 0 && i === n / 2) {
+          solutionCount *= 2;
+          break;
+        }
         board.togglePiece(r, i);
         //if there are no conflicts, recurse
         if (!board.hasAnyColConflicts() && !board.hasAnyMajorDiagonalConflicts() && !board.hasAnyMinorDiagonalConflicts()) {
