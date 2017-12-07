@@ -193,7 +193,7 @@
       // if input is 0 or more, 
       if (firstIndex > 0) {
         //for the first row until input 
-        for (var i = 0; i < this.attributes.n - firstIndex + 1; i++) {
+        for (var i = 0; i <= firstIndex; i++) {
           //get row
           var row = this.get(i);
           //check row at index of input - row index
