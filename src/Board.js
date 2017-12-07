@@ -153,8 +153,8 @@
           }
         }       
       } else {
-         // if there's a mirror diagonal, then check it also
-        for (var i = -majorDiagonalColumnIndexAtFirstRow, colIndex = 0; i < this.attributes.n; i++, colIndex++) {
+         // if there's a mirror diagonal (input is negative), then check it also
+        for (var i = -colIndex, colIndex = 0; i < this.attributes.n; i++, colIndex++) {
           var row = this.get(i);
 
           counter = increaseIfPieceInSquare(row, colIndex, counter);
@@ -181,31 +181,35 @@
 
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
-    //
-    // test if a specific minor diagonal on this board contains a conflict
+
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
       // create coutner
       var counter = 0;
-      var firstIndex = minorDiagonalColumnIndexAtFirstRow;
+      var colIndex = minorDiagonalColumnIndexAtFirstRow;
       // if input is 0 or more, 
-      if (firstIndex > 0) {
+      if (colIndex < this.attributes.n && colIndex !== 0) {
         //for the first row until input 
-        for (var i = 0; i <= firstIndex; i++) {
+        for (var i = 0; i <= colIndex; i++) {
           //get row
           var row = this.get(i);
           //check row at index of input - row index, if true increase counter
-          counter = increaseIfPieceInSquare(row, firstIndex - i, counter);
+          counter = increaseIfPieceInSquare(row, colIndex - i, counter);
             //if counter === 2, return true
           if (hasConflict(counter)) {
             return true;
           }
         }
-      } else if (firstIndex < 0) {
-        //else 
-        //for row=-row until n, col = n-1; row++, col-- 
-        for (var j = -firstIndex, colIndex = this.attributes.n - 1; j < this.attributes.n; j++, colIndex--) {
+        // for cases where input is bigger then n
+      } else if (colIndex > this.attributes.n) {
+        var startRow = 0;
+        
+        while (colIndex > this.attributes.n) {
+          colIndex--;
+          startRow++;
+        }
+        for (; startRow < this.attributes.n; startRow++, colIndex--) {
           //get row
-          row = this.get(j);
+          row = this.get(startRow);
           //check row at col, if true, increase counter
           counter = increaseIfPieceInSquare(row, colIndex, counter);
           if (hasConflict(counter)) {
@@ -244,6 +248,9 @@
 }());
 
 var increaseIfPieceInSquare = function(row, index, counter) {
+  if (row === undefined || row[index] === undefined) {
+//    debugger;
+  }
   if (row[index]) {
     return ++counter;
   }
