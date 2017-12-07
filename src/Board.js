@@ -81,12 +81,11 @@
     hasRowConflictAt: function(rowIndex) {
       var row = this.get(rowIndex);
       var counter = 0;
+
       for (var i = 0; i < row.length; i++) {
-        if (row[i]) {
-          counter++;
-          if (counter === 2) {
-            return true;
-          }
+        counter = increaseIfPieceInSquare(row, i, counter);
+        if (hasConflict(counter)) {
+          return true;
         }
       }
       return false; 
@@ -108,16 +107,14 @@
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
       var counter = 0;
+
       // for each row
       for (var i = 0; i < this.attributes.n; i++) {
         //  if board[row][colIndex] is 1
         var row = this.get(i);
-        if (row[colIndex]) {
-          counter++;
-          if (counter === 2) {
-            // return true
-            return true;          
-          }
+        counter = increaseIfPieceInSquare(row, colIndex, counter);
+        if (hasConflict(counter)) {
+          return true;          
         }
       }
       return false; 
@@ -144,25 +141,25 @@
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
       // What about diagonal [0, 1] to [3, 2], [0, 2] to [3, 1] - recursive
       var counter = 0;
-      if (majorDiagonalColumnIndexAtFirstRow >= 0) {
-        for (var i = 0; i < this.attributes.n - majorDiagonalColumnIndexAtFirstRow; i++) {
+      var colIndex = majorDiagonalColumnIndexAtFirstRow;
+
+      if (colIndex >= 0) {
+        for (var i = 0; i < this.attributes.n - colIndex; i++) {
           var row = this.get(i);
-          if (row[majorDiagonalColumnIndexAtFirstRow + i]) {
-            counter++;
-            if (counter === 2) {
-              return true;
-            }
+
+          counter = increaseIfPieceInSquare(row, colIndex + i, counter);
+          if (hasConflict(counter)) {
+            return true;
           }
         }       
       } else {
          // if there's a mirror diagonal, then check it also
         for (var i = -majorDiagonalColumnIndexAtFirstRow, colIndex = 0; i < this.attributes.n; i++, colIndex++) {
           var row = this.get(i);
-          if (row[colIndex]) {
-            counter++;
-            if (counter === 2) {
-              return true;
-            }
+
+          counter = increaseIfPieceInSquare(row, colIndex, counter);
+          if (hasConflict(counter)) {
+            return true;
           }
         }
       }
@@ -196,14 +193,11 @@
         for (var i = 0; i <= firstIndex; i++) {
           //get row
           var row = this.get(i);
-          //check row at index of input - row index
-          if (row[firstIndex - i]) {
-          //if true, counter ++
-            counter++;
+          //check row at index of input - row index, if true increase counter
+          counter = increaseIfPieceInSquare(row, firstIndex - i, counter);
             //if counter === 2, return true
-            if (counter === 2) {
-              return true;
-            }
+          if (hasConflict(counter)) {
+            return true;
           }
         }
       } else if (firstIndex < 0) {
@@ -212,15 +206,10 @@
         for (var j = -firstIndex, colIndex = this.attributes.n - 1; j < this.attributes.n; j++, colIndex--) {
           //get row
           row = this.get(j);
-          //check row at col
-          if (row[colIndex]) {
-            //if true
-              //counter ++
-            counter++;
-              //if counter ===2, return true
-            if (counter === 2) {
-              return true;
-            }
+          //check row at col, if true, increase counter
+          counter = increaseIfPieceInSquare(row, colIndex, counter);
+          if (hasConflict(counter)) {
+            return true;         
           }
         }
       }
@@ -253,3 +242,16 @@
   };
 
 }());
+
+var increaseIfPieceInSquare = function(row, index, counter) {
+  if (row[index]) {
+    return ++counter;
+  }
+  return counter;
+}; 
+
+var hasConflict = function(counter) {
+  if (counter === 2) {
+    return true;
+  } 
+};
