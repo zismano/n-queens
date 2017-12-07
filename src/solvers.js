@@ -17,7 +17,7 @@
 
 window.findNRooksSolution = function(n) {
   var solution = []; 
-  var board = new Board({n:n});
+  var board = new Board({n: n});
   var renderNRookSolution = function(r) {
     if (r === n) {
       for (var i = 0; i < n; i++) {
@@ -34,7 +34,7 @@ window.findNRooksSolution = function(n) {
         board.togglePiece(r, i);
       }
     }
-  }
+  };
   solution = renderNRookSolution(0);
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
@@ -44,8 +44,8 @@ window.findNRooksSolution = function(n) {
 window.countNRooksSolutions = function(n) {
   var solutionCount = undefined; //fixme
   var solutions = []; 
-  var solution = []
-  var board = new Board({n:n});
+  var solution = [];
+  var board = new Board({n: n});
   var renderNRookSolution = function(r) {
     if (r === n) {
       for (var i = 0; i < n; i++) {
@@ -63,7 +63,7 @@ window.countNRooksSolutions = function(n) {
         board.togglePiece(r, i);
       }
     }
-  }
+  };
   renderNRookSolution(0);
   solutionCount = solutions.length;
 
@@ -74,28 +74,33 @@ window.countNRooksSolutions = function(n) {
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
   var solution = []; 
-  var board = new Board({n:n});
-  var renderNQueensSolution = function(r) {
-    if (r === n) {
-      for (var i = 0; i < n; i++) {
-        solution[i] = board.get(i);
-      }
-      return solution;
+  var board = new Board({n: n});
+  if (n === 2 || n === 3) {
+    for (var i = 0; i < n; i++) {
+      solution[i] = board.get(i);  
     }
-    for (var i = 0; i < n; i++) { 
-      board.togglePiece(r, i);
-      if (!board.hasAnyColConflicts() && !board.hasAnyMajorDiagonalConflicts() && 
-        !board.hasAnyMinorDiagonalConflicts()) {
-        return renderNQueensSolution(r + 1);
+  } else {
+    var renderNQueensSolution = function(r) {
+      if (r === n) {
+        //the base case puts a solution into the solution
+        for (var i = 0; i < n; i++) {
+          solution[i] = board.get(i).slice(0);
+        }
+        return solution;
+      }
+      for (var i = 0; i < n; i++) { 
         board.togglePiece(r, i);
-      } else {
+        //if there are no conflicts, recurse
+        if (!board.hasAnyColConflicts() && !board.hasAnyMajorDiagonalConflicts() && 
+          !board.hasAnyMinorDiagonalConflicts()) {
+          renderNQueensSolution(r + 1);
+        } 
         board.togglePiece(r, i);
       }
-    }
+    };
+    renderNQueensSolution(0);
   }
-  solution = renderNQueensSolution(0);
-
-
+  
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
 };
