@@ -86,7 +86,7 @@ window.findNQueensSolution = function(n) {
       for (var i = 0; i < n; i++) { 
         board.togglePiece(r, i);
         //if there are no conflicts, recurse
-        if (!board.hasAnyColConflicts() && !board.hasAnyMajorDiagonalConflicts() && !board.hasAnyMinorDiagonalConflicts()) {
+        if (!board.hasAnyQueensConflicts()) {
           renderNQueensSolution(r + 1);
         } 
         board.togglePiece(r, i);
@@ -118,7 +118,7 @@ window.countNQueensSolutions = function(n) {
         }
         board.togglePiece(r, i);
         //if there are no conflicts, recurse
-        if (!board.hasAnyColConflicts() && !board.hasAnyMajorDiagonalConflicts() && !board.hasAnyMinorDiagonalConflicts()) {
+        if (!board.hasAnyQueensConflicts()) {
           renderNQueensSolution(r + 1);
         } 
         board.togglePiece(r, i);
