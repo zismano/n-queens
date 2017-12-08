@@ -199,25 +199,17 @@
             return true;
           }
         }
-        // for cases where input is bigger then n
-      } else if (colIndex > this.attributes.n) {
-        var startRow = 0;
-        
-        while (colIndex > this.attributes.n) {
-          colIndex--;
-          startRow++;
-        }
-        for (; startRow < this.attributes.n; startRow++, colIndex--) {
+      } else if (colIndex < 0) {
+        //for row=-row until n, col = n-1; row++, col-- 
+        for (var j = -colIndex, currColIndex = this.attributes.n - 1; j < this.attributes.n; j++, currColIndex--) {
           //get row
-          row = this.get(startRow);
+          row = this.get(j);
           //check row at col, if true, increase counter
-          counter = increaseIfPieceInSquare(row, colIndex, counter);
+          counter = increaseIfPieceInSquare(row, currColIndex, counter);
           if (hasConflict(counter)) {
             return true;         
           }
         }
-      } else if (colIndex < 0) {
-        
       }
       return false;
     },
@@ -231,7 +223,7 @@
           return true;
         }    
       }
-      return false; // fixme
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
@@ -250,9 +242,6 @@
 }());
 
 var increaseIfPieceInSquare = function(row, index, counter) {
-  if (row === undefined || row[index] === undefined) {
-//    debugger;
-  }
   if (row[index]) {
     return ++counter;
   }
