@@ -183,11 +183,11 @@
     // --------------------------------------------------------------
 
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      // create coutner
+      // create counter
       var counter = 0;
       var colIndex = minorDiagonalColumnIndexAtFirstRow;
       // if input is 0 or more, 
-      if (colIndex < this.attributes.n && colIndex !== 0) {
+      if (colIndex < this.attributes.n && colIndex > 0) {
         //for the first row until input 
         for (var i = 0; i <= colIndex; i++) {
           //get row
@@ -216,6 +216,8 @@
             return true;         
           }
         }
+      } else if (colIndex < 0) {
+        
       }
       return false;
     },
